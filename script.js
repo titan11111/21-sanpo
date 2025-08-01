@@ -124,9 +124,79 @@ const days = [
                 choices: [
                     { text: "信号を待つ", action: "waitForSignal" },
                     { text: "左右を確認する", action: "checkBothSides" },
-                    { text: "葉っぱを拾う", action: "searchTreasure", treasure: "goldenLeaf" }
+                    { text: "葉っぱを拾う", action: "searchTreasure", treasure: "goldenLeaf" },
+                    { text: "図書館へ向かう", action: "next" }
                 ],
                 treasures: ["goldenLeaf"]
+            },
+            {
+                name: "図書館",
+                icon: "📚",
+                story: "静かな図書館に着きました。<br>本がたくさん並んでいます。<br>ページをめくる音が心地よいです。",
+                choices: [
+                    { text: "本を読む", action: "readBook" },
+                    { text: "次へ進む", action: "next" }
+                ],
+                treasures: []
+            },
+            {
+                name: "美術館",
+                icon: "🖼️",
+                story: "美術館に入ると素敵な絵が並んでいます。<br>静かに鑑賞している人たちがいます。",
+                choices: [
+                    { text: "絵を鑑賞する", action: "viewArt" },
+                    { text: "次へ進む", action: "next" }
+                ],
+                treasures: []
+            },
+            {
+                name: "市場",
+                icon: "🥕",
+                story: "市場は活気であふれています。<br>色とりどりの果物や野菜が並んでいます。",
+                choices: [
+                    { text: "果物を試食する", action: "tasteFruit" },
+                    { text: "次へ進む", action: "next" }
+                ],
+                treasures: []
+            },
+            {
+                name: "裏道",
+                icon: "🛣️",
+                story: "細い裏道で突然大きな犬が現れました！<br>どうする？",
+                choices: [
+                    { text: "走って逃げる", action: "runAway", next: 10 },
+                    { text: "そっと後ずさりする", action: "backAway", next: 11 },
+                    { text: "助けを呼ぶ", action: "callHelp", next: 12 },
+                    { text: "おやつをあげる", action: "befriendDog", next: 10 }
+                ],
+                treasures: []
+            },
+            {
+                name: "森",
+                icon: "🌲",
+                story: "森に逃げ込むと、木々の間から光が差し込みます。<br>鳥のさえずりが聞こえてきます。",
+                choices: [
+                    { text: "次へ進む", action: "next", next: 13 }
+                ],
+                treasures: []
+            },
+            {
+                name: "池",
+                icon: "🏞️",
+                story: "静かな池にたどり着きました。<br>水面には小さな魚が泳いでいます。",
+                choices: [
+                    { text: "次へ進む", action: "next", next: 13 }
+                ],
+                treasures: []
+            },
+            {
+                name: "駅",
+                icon: "🚉",
+                story: "賑やかな駅前に出ました。<br>たくさんの人が行き交っています。",
+                choices: [
+                    { text: "次へ進む", action: "next", next: 13 }
+                ],
+                treasures: []
             },
             {
                 name: "おうち",
@@ -187,6 +257,41 @@ const events = {
         heartPoints: 3,
         diary: "👵 坂道でおばあさんから優しい言葉をかけてもらいました。人の思いやりって素敵です。"
     },
+    readBook: {
+        story: "静かな時間を過ごしました。<br>面白い物語に夢中になりました。",
+        heartPoints: 2,
+        diary: "📚 図書館でゆっくり本を読みました。新しい知識が増えました。",
+    },
+    viewArt: {
+        story: "美しい絵に心を奪われました。<br>芸術って素敵ですね。",
+        heartPoints: 2,
+        diary: "🖼️ 美術館で素敵な絵を鑑賞しました。感性が磨かれた気がします。",
+    },
+    tasteFruit: {
+        story: "市場で新鮮な果物を味見しました。<br>とてもおいしい！",
+        heartPoints: 2,
+        diary: "🍓 市場で果物を試食しました。旬の味を楽しめました。",
+    },
+    runAway: {
+        story: "全力で走ってその場を離れました。<br>ドキドキが止まりません。",
+        heartPoints: 0,
+        diary: "🏃 大きな犬から走って逃げました。無事でよかったです。",
+    },
+    backAway: {
+        story: "そっと後ずさりして距離を取りました。<br>犬は興味をなくして去っていきました。",
+        heartPoints: 1,
+        diary: "🚶 静かに離れたら何事もなく済みました。",
+    },
+    callHelp: {
+        story: "近くの人に助けを求めました。<br>みんなが協力してくれました。",
+        heartPoints: 3,
+        diary: "📣 困ったときは助けを呼ぶのが一番ですね。",
+    },
+    befriendDog: {
+        story: "おやつをあげると犬はしっぽを振って仲良くなりました。",
+        heartPoints: 2,
+        diary: "🐶 犬と友達になれました。とてもかわいかったです。",
+    },
     waitForSignal: {
         story: "きちんと信号を待って渡りました。<br>ルールを守ることの大切さを<br>改めて感じました。",
         heartPoints: 2,
@@ -234,14 +339,18 @@ function showLocation() {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.textContent = choice.text;
-        btn.onclick = () => handleChoice(choice.action, choice.treasure);
+        btn.onclick = () => handleChoice(choice.action, choice.treasure, choice.next);
         choicesDiv.appendChild(btn);
     });
 }
 
-function handleChoice(action, treasure) {
+function handleChoice(action, treasure, nextIndex) {
     if (action === 'next') {
-        gameState.currentLocation++;
+        if (typeof nextIndex === 'number') {
+            gameState.currentLocation = nextIndex;
+        } else {
+            gameState.currentLocation++;
+        }
         updateProgress();
         showLocation();
     } else if (action === 'showDiary') {
@@ -249,7 +358,7 @@ function handleChoice(action, treasure) {
     } else if (action === 'searchTreasure') {
         findTreasure(treasure);
     } else if (events[action]) {
-        showEvent(action);
+        showEvent(action, nextIndex);
     }
 }
 
@@ -308,7 +417,7 @@ function showTreasurePopup(treasure) {
     }, 2000);
 }
 
-function showEvent(eventName) {
+function showEvent(eventName, nextIndex) {
     const event = events[eventName];
     const hasMet = gameState.metCharacters[eventName];
     const story = event.repeatStory && hasMet ? event.repeatStory : event.firstStory || event.story;
@@ -346,7 +455,11 @@ function showEvent(eventName) {
     continueBtn.className = 'choice-btn';
     continueBtn.textContent = '次へ進む';
     continueBtn.onclick = () => {
-        gameState.currentLocation++;
+        if (typeof nextIndex === 'number') {
+            gameState.currentLocation = nextIndex;
+        } else {
+            gameState.currentLocation++;
+        }
         updateProgress();
         showLocation();
     };
