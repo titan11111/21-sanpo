@@ -127,7 +127,9 @@ const days = [
                     { text: "信号を待つ", action: "waitForSignal" },
                     { text: "左右を確認する", action: "checkBothSides" },
                     { text: "葉っぱを拾う", action: "searchTreasure", treasure: "goldenLeaf" },
-                    { text: "図書館へ向かう", action: "next" }
+                    { text: "図書館へ向かう", action: "next", next: 6 },
+                    { text: "美術館へ向かう", action: "next", next: 7 },
+                    { text: "市場へ向かう", action: "next", next: 8 }
                 ],
                 treasures: ["goldenLeaf"]
             },
@@ -180,7 +182,7 @@ const days = [
                 choices: [
                     { text: "鳥の声を聞く", action: "listenToBirds" },
                     { text: "木の実を拾う", action: "pickAcorn" },
-                    { text: "次へ進む", action: "next", next: 13 }
+                    { text: "次へ進む", action: "next", next: 23 }
                 ],
                 treasures: []
             },
@@ -191,7 +193,7 @@ const days = [
                 choices: [
                     { text: "魚を眺める", action: "watchFish" },
                     { text: "石を投げる", action: "throwStone" },
-                    { text: "次へ進む", action: "next", next: 13 }
+                    { text: "次へ進む", action: "next", next: 23 }
                 ],
                 treasures: []
             },
@@ -200,9 +202,110 @@ const days = [
                 icon: "🚉",
                 story: "賑やかな駅前に出ました。<br>たくさんの人が行き交っています。",
                 choices: [
-                    { text: "電車を見る", action: "watchTrains" },
-                    { text: "ベンチで休む", action: "restOnBench" },
-                    { text: "次へ進む", action: "next", next: 13 }
+                    { text: "神社に行く", action: "next", next: 13 },
+                    { text: "動物園に行く", action: "next", next: 16 },
+                    { text: "海辺に行く", action: "next", next: 19 },
+                    { text: "家に帰る", action: "next", next: 23 }
+                ],
+                treasures: []
+            },
+            {
+                name: "神社",
+                icon: "⛩️",
+                story: "静かな神社に到着しました。<br>心が落ち着きます。",
+                choices: [
+                    { text: "お参りする", action: "prayAtShrine", next: 14 },
+                    { text: "次へ進む", action: "next", next: 14 }
+                ],
+                treasures: []
+            },
+            {
+                name: "橋",
+                icon: "🌉",
+                story: "大きな橋にさしかかりました。<br>下には川が流れています。",
+                choices: [
+                    { text: "景色を眺める", action: "viewBridge", next: 22 },
+                    { text: "次へ進む", action: "next", next: 22 }
+                ],
+                treasures: []
+            },
+            {
+                name: "カフェ",
+                icon: "☕",
+                story: "落ち着いたカフェに入りました。<br>いい香りが漂っています。",
+                choices: [
+                    { text: "コーヒーを飲む", action: "drinkCoffee", next: 23 },
+                    { text: "家に帰る", action: "next", next: 23 }
+                ],
+                treasures: []
+            },
+            {
+                name: "動物園",
+                icon: "🐼",
+                story: "賑やかな動物園です。<br>いろいろな動物がいます。",
+                choices: [
+                    { text: "動物を見る", action: "seeAnimals", next: 17 },
+                    { text: "次へ進む", action: "next", next: 17 }
+                ],
+                treasures: []
+            },
+            {
+                name: "庭園",
+                icon: "🌸",
+                story: "美しい庭園にやってきました。<br>花の香りがします。",
+                choices: [
+                    { text: "花を楽しむ", action: "enjoyGarden", next: 18 },
+                    { text: "次へ進む", action: "next", next: 18 }
+                ],
+                treasures: []
+            },
+            {
+                name: "遊園地",
+                icon: "🎢",
+                story: "楽しい遊園地です。<br>色々なアトラクションがあります。",
+                choices: [
+                    { text: "観覧車に乗る", action: "rideFerris", next: 23 },
+                    { text: "家に帰る", action: "next", next: 23 }
+                ],
+                treasures: []
+            },
+            {
+                name: "海辺",
+                icon: "🏖️",
+                story: "波の音が心地よい海辺に着きました。",
+                choices: [
+                    { text: "砂浜を歩く", action: "walkBeach", next: 20 },
+                    { text: "次へ進む", action: "next", next: 20 }
+                ],
+                treasures: []
+            },
+            {
+                name: "灯台",
+                icon: "🗼",
+                story: "高い灯台に到着しました。<br>海が一望できます。",
+                choices: [
+                    { text: "上まで登る", action: "climbLighthouse", next: 21 },
+                    { text: "次へ進む", action: "next", next: 21 }
+                ],
+                treasures: []
+            },
+            {
+                name: "山頂",
+                icon: "🗻",
+                story: "山頂に着きました。<br>遠くまで見渡せます。",
+                choices: [
+                    { text: "景色を楽しむ", action: "enjoyMountain", next: 15 },
+                    { text: "次へ進む", action: "next", next: 15 }
+                ],
+                treasures: []
+            },
+            {
+                name: "学校",
+                icon: "🏫",
+                story: "懐かしい学校に着きました。<br>子どもたちの声が聞こえてきます。",
+                choices: [
+                    { text: "校庭を歩く", action: "walkSchoolyard", next: 23 },
+                    { text: "家に帰る", action: "next", next: 23 }
                 ],
                 treasures: []
             },
@@ -330,6 +433,56 @@ const events = {
         heartPoints: 2,
         diary: "🐶 犬と友達になれました。とてもかわいかったです。",
     },
+    prayAtShrine: {
+        story: "静かに手を合わせてお参りしました。<br>心がすっきりします。",
+        heartPoints: 3,
+        diary: "⛩️ 神社でお参りをして心が落ち着きました。"
+    },
+    viewBridge: {
+        story: "橋の上から川を眺めると風が気持ちいいです。",
+        heartPoints: 2,
+        diary: "🌉 橋の上で景色を楽しみました。"
+    },
+    drinkCoffee: {
+        story: "温かいコーヒーで一息つきました。",
+        heartPoints: 2,
+        diary: "☕ カフェでコーヒーを飲んで休憩しました。"
+    },
+    seeAnimals: {
+        story: "かわいい動物たちが元気に動き回っています。",
+        heartPoints: 2,
+        diary: "🐼 動物園で動物たちに癒されました。"
+    },
+    enjoyGarden: {
+        story: "色とりどりの花が咲き誇っています。",
+        heartPoints: 2,
+        diary: "🌸 庭園で美しい花を眺めました。"
+    },
+    rideFerris: {
+        story: "観覧車から街が一望できました。",
+        heartPoints: 3,
+        diary: "🎢 遊園地で観覧車に乗りました。"
+    },
+    walkBeach: {
+        story: "波打ち際を歩くと足元がくすぐったい。",
+        heartPoints: 2,
+        diary: "🏖️ 海辺を散歩して気分爽快でした。"
+    },
+    climbLighthouse: {
+        story: "灯台の頂上から海を見渡しました。",
+        heartPoints: 3,
+        diary: "🗼 灯台に登って遠くまで見渡しました。"
+    },
+    enjoyMountain: {
+        story: "山頂の空気はとても澄んでいます。",
+        heartPoints: 3,
+        diary: "🗻 山頂で壮大な景色を楽しみました。"
+    },
+    walkSchoolyard: {
+        story: "校庭を歩くと子どもたちの笑い声が聞こえてきました。",
+        heartPoints: 2,
+        diary: "🏫 学校で懐かしい気持ちになりました。"
+    },
     waitForSignal: {
         story: "きちんと信号を待って渡りました。<br>ルールを守ることの大切さを<br>改めて感じました。",
         heartPoints: 2,
@@ -406,7 +559,7 @@ function moveToNextLocation(nextIndex) {
         if (i !== -1) {
             gameState.remainingIndexes.splice(i, 1);
         }
-    } else if (gameState.remainingIndexes.length > 0 && gameState.visitedCount < 5) {
+    } else if (gameState.remainingIndexes.length > 0 && gameState.visitedCount < 15) {
         const random = Math.floor(Math.random() * gameState.remainingIndexes.length);
         gameState.currentLocation = gameState.remainingIndexes.splice(random, 1)[0];
     } else {
@@ -414,7 +567,7 @@ function moveToNextLocation(nextIndex) {
         gameState.remainingIndexes = [];
     }
     gameState.visitedCount++;
-    if (gameState.visitedCount >= 5 || gameState.currentLocation === gameState.dayLocations.length - 1) {
+    if (gameState.visitedCount >= 15 || gameState.currentLocation === gameState.dayLocations.length - 1) {
         gameState.currentLocation = gameState.dayLocations.length - 1;
         gameState.remainingIndexes = [];
     }
@@ -518,7 +671,7 @@ function showEvent(eventName, nextIndex) {
 }
 
 function updateProgress() {
-    const percent = (Math.min(gameState.visitedCount, 5) / 5) * 100;
+    const percent = (Math.min(gameState.visitedCount, 15) / 15) * 100;
     document.getElementById('progress-fill').style.width = percent + '%';
 }
 
