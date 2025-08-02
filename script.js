@@ -178,6 +178,8 @@ const days = [
                 icon: "🌲",
                 story: "森に逃げ込むと、木々の間から光が差し込みます。<br>鳥のさえずりが聞こえてきます。",
                 choices: [
+                    { text: "鳥の声を聞く", action: "listenToBirds" },
+                    { text: "木の実を拾う", action: "pickAcorn" },
                     { text: "次へ進む", action: "next", next: 13 }
                 ],
                 treasures: []
@@ -187,6 +189,8 @@ const days = [
                 icon: "🏞️",
                 story: "静かな池にたどり着きました。<br>水面には小さな魚が泳いでいます。",
                 choices: [
+                    { text: "魚を眺める", action: "watchFish" },
+                    { text: "石を投げる", action: "throwStone" },
                     { text: "次へ進む", action: "next", next: 13 }
                 ],
                 treasures: []
@@ -196,6 +200,8 @@ const days = [
                 icon: "🚉",
                 story: "賑やかな駅前に出ました。<br>たくさんの人が行き交っています。",
                 choices: [
+                    { text: "電車を見る", action: "watchTrains" },
+                    { text: "ベンチで休む", action: "restOnBench" },
                     { text: "次へ進む", action: "next", next: 13 }
                 ],
                 treasures: []
@@ -273,6 +279,36 @@ const events = {
         story: "市場で新鮮な果物を味見しました。<br>とてもおいしい！",
         heartPoints: 2,
         diary: "🍓 市場で果物を試食しました。旬の味を楽しめました。",
+    },
+    listenToBirds: {
+        story: "木の上から美しい鳥のさえずりが聞こえてきます。<br>心が落ち着きます。",
+        heartPoints: 2,
+        diary: "🐦 森で鳥のさえずりを聞いて癒されました。",
+    },
+    pickAcorn: {
+        story: "足元にどんぐりが落ちていました。<br>小さな宝物をポケットにしまいました。",
+        heartPoints: 1,
+        diary: "🌰 森でかわいいどんぐりを拾いました。",
+    },
+    watchFish: {
+        story: "池の魚たちが楽しそうに泳いでいます。<br>見ているだけで穏やかな気持ちになります。",
+        heartPoints: 1,
+        diary: "🐟 池で泳ぐ魚を眺めてのんびりしました。",
+    },
+    throwStone: {
+        story: "石を投げると、水面に波紋が広がりました。<br>何度も跳ねて楽しい！",
+        heartPoints: 1,
+        diary: "💦 池に小石を投げて波紋を眺めました。",
+    },
+    watchTrains: {
+        story: "ホームに入る電車を見ていると、遠くへ行きたくなります。",
+        heartPoints: 1,
+        diary: "🚆 駅で電車が通るのを眺めました。旅に出たくなります。",
+    },
+    restOnBench: {
+        story: "ベンチに座ってひと休み。<br>行き交う人々を眺めながら息を整えました。",
+        heartPoints: 2,
+        diary: "🪑 駅のベンチで少し休憩しました。人の流れを見ているのも面白いです。",
     },
     runAway: {
         story: "全力で走ってその場を離れました。<br>ドキドキが止まりません。",
@@ -370,7 +406,7 @@ function moveToNextLocation(nextIndex) {
         if (i !== -1) {
             gameState.remainingIndexes.splice(i, 1);
         }
-    } else if (gameState.remainingIndexes.length > 0) {
+    } else if (gameState.remainingIndexes.length > 0 && gameState.visitedCount < 5) {
         const random = Math.floor(Math.random() * gameState.remainingIndexes.length);
         gameState.currentLocation = gameState.remainingIndexes.splice(random, 1)[0];
     } else {
@@ -378,8 +414,8 @@ function moveToNextLocation(nextIndex) {
         gameState.remainingIndexes = [];
     }
     gameState.visitedCount++;
-    if (gameState.currentLocation === gameState.dayLocations.length - 1) {
-        gameState.visitedCount = gameState.dayLocations.length - 1;
+    if (gameState.visitedCount >= 5 || gameState.currentLocation === gameState.dayLocations.length - 1) {
+        gameState.currentLocation = gameState.dayLocations.length - 1;
         gameState.remainingIndexes = [];
     }
     updateProgress();
@@ -482,7 +518,7 @@ function showEvent(eventName, nextIndex) {
 }
 
 function updateProgress() {
-    const percent = (gameState.visitedCount / (gameState.dayLocations.length - 1)) * 100;
+    const percent = (Math.min(gameState.visitedCount, 5) / 5) * 100;
     document.getElementById('progress-fill').style.width = percent + '%';
 }
 
