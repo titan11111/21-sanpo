@@ -7,7 +7,9 @@ let gameState = {
     dayLocations: [],
     metCharacters: {},  // キャラクターとの出会い記録
     treasures: {},      // 発見した宝物の記録
-    totalTreasures: 0   // 発見した宝物の総数
+    totalTreasures: 0,  // 発見した宝物の総数
+    remainingIndexes: [], // 未訪問の場所リスト
+    visitedCount: 0      // 訪問済みの場所数
 };
 
 // 宝物データベース
@@ -314,6 +316,11 @@ function startWalk() {
     gameState.heartPoints = 0;
     gameState.diaryEntries = [];
     gameState.dayLocations = days[gameState.currentDay - 1].locations;
+    gameState.remainingIndexes = [];
+    for (let i = 1; i < gameState.dayLocations.length - 1; i++) {
+        gameState.remainingIndexes.push(i);
+    }
+    gameState.visitedCount = 0;
 
     document.getElementById('heart-points').textContent = '0';
     updateTreasureCount();
@@ -346,13 +353,7 @@ function showLocation() {
 
 function handleChoice(action, treasure, nextIndex) {
     if (action === 'next') {
-        if (typeof nextIndex === 'number') {
-            gameState.currentLocation = nextIndex;
-        } else {
-            gameState.currentLocation++;
-        }
-        updateProgress();
-        showLocation();
+        moveToNextLocation(nextIndex);
     } else if (action === 'showDiary') {
         showDiary();
     } else if (action === 'searchTreasure') {
@@ -360,6 +361,30 @@ function handleChoice(action, treasure, nextIndex) {
     } else if (events[action]) {
         showEvent(action, nextIndex);
     }
+}
+
+function moveToNextLocation(nextIndex) {
+    if (typeof nextIndex === 'number') {
+        gameState.currentLocation = nextIndex;
+        const i = gameState.remainingIndexes.indexOf(nextIndex);
+        if (i !== -1) {
+            gameState.remainingIndexes.splice(i, 1);
+        }
+    } else if (gameState.remainingIndexes.length > 0) {
+        const random = Math.floor(Math.random() * gameState.remainingIndexes.length);
+        gameState.currentLocation = gameState.remainingIndexes.splice(random, 1)[0];
+    } else {
+        gameState.currentLocation = gameState.dayLocations.length - 1;
+        gameState.remainingIndexes = [];
+    }
+    gameState.visitedCount++;
+    if (gameState.currentLocation === gameState.dayLocations.length - 1) {
+        gameState.visitedCount = gameState.dayLocations.length - 1;
+        gameState.remainingIndexes = [];
+    }
+    updateProgress();
+    showLocation();
+    playSound(440);
 }
 
 function findTreasure(treasureId) {
@@ -378,6 +403,7 @@ function findTreasure(treasureId) {
     gameState.heartPoints += 2;
     gameState.diaryEntries.push(`✨ ${treasure.name}を発見しました！ ${treasure.description}`);
 
+    playSound(880);
     // 宝物発見演出
     showTreasurePopup(treasure);
 
@@ -389,15 +415,11 @@ function findTreasure(treasureId) {
     setTimeout(() => {
         const choicesDiv = document.getElementById('choices');
         choicesDiv.innerHTML = '';
-        
+
         const continueBtn = document.createElement('button');
         continueBtn.className = 'choice-btn';
         continueBtn.textContent = '次へ進む';
-        continueBtn.onclick = () => {
-            gameState.currentLocation++;
-            updateProgress();
-            showLocation();
-        };
+        continueBtn.onclick = () => moveToNextLocation();
         choicesDiv.appendChild(continueBtn);
     }, 2000);
 }
@@ -444,6 +466,7 @@ function showEvent(eventName, nextIndex) {
         }, 1000);
     }
 
+    playSound(660);
     document.getElementById('heart-points').textContent = gameState.heartPoints;
     updateTreasureCount();
     document.getElementById('story-text').innerHTML = story;
@@ -454,25 +477,31 @@ function showEvent(eventName, nextIndex) {
     const continueBtn = document.createElement('button');
     continueBtn.className = 'choice-btn';
     continueBtn.textContent = '次へ進む';
-    continueBtn.onclick = () => {
-        if (typeof nextIndex === 'number') {
-            gameState.currentLocation = nextIndex;
-        } else {
-            gameState.currentLocation++;
-        }
-        updateProgress();
-        showLocation();
-    };
+    continueBtn.onclick = () => moveToNextLocation(nextIndex);
     choicesDiv.appendChild(continueBtn);
 }
 
 function updateProgress() {
-    const percent = (gameState.currentLocation / (gameState.dayLocations.length - 1)) * 100;
+    const percent = (gameState.visitedCount / (gameState.dayLocations.length - 1)) * 100;
     document.getElementById('progress-fill').style.width = percent + '%';
 }
 
 function updateTreasureCount() {
     document.getElementById('treasure-count').textContent = gameState.totalTreasures;
+}
+
+function playSound(frequency = 440) {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = frequency;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+    osc.stop(ctx.currentTime + 0.5);
 }
 
 function showDiary() {
@@ -565,7 +594,9 @@ function restartGame() {
         dayLocations: [],
         metCharacters: {},
         treasures: {},
-        totalTreasures: 0
+        totalTreasures: 0,
+        remainingIndexes: [],
+        visitedCount: 0
     };
 
     document.getElementById('heart-points').textContent = '0';
