@@ -799,6 +799,12 @@ function restartGame() {
     startWalk();
 }
 
+document.addEventListener('mouseover', event => {
+    if (event.target.classList.contains('choice-btn')) {
+        playSound(660);
+    }
+});
+
 window.addEventListener('load', () => {
     startWalk();
 });
