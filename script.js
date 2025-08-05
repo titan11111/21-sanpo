@@ -64,264 +64,144 @@ const treasureData = {
     }
 };
 
-const days = [
+// 基本となる場所の一覧
+const startLocation = {
+    name: "おうち",
+    icon: "🏠",
+    story: "今日はとても良い天気！<br>街を一周して、いろんな出会いを楽しみましょう。<br>散歩中に素敵な宝物も見つかるかも！<br>さあ、散歩に出発です！",
+    choices: [
+        { text: "散歩を始める", action: "next" },
+        { text: "水を飲む", action: "drinkCoffee" },
+        { text: "ちょっと休む", action: "takeRest" },
+        { text: "本を読む", action: "readBook" }
+    ],
+    treasures: []
+};
+
+const endLocation = {
+    name: "おうち",
+    icon: "🏠",
+    story: "お疲れさまでした！<br>楽しい散歩から帰ってきました。<br>今日の出会いを振り返ってみましょう。<br>もしかしたら、特別な宝物も見つかるかも？",
+    choices: [
+        { text: "日記を見る", action: "showDiary" },
+        { text: "周りを探索する", action: "searchTreasure", treasure: "heartCrystal" },
+        { text: "お茶を飲む", action: "drinkCoffee" },
+        { text: "休憩する", action: "takeRest" }
+    ],
+    treasures: ["heartCrystal"]
+};
+
+const baseLocations = [
     {
-        day: 1,
-        locations: [
-            {
-                name: "おうち",
-                icon: "🏠",
-                story: "今日はとても良い天気！<br>街を一周して、いろんな出会いを楽しみましょう。<br>散歩中に素敵な宝物も見つかるかも！<br>さあ、散歩に出発です！",
-                choices: [{ text: "散歩を始める", action: "next" }],
-                treasures: []
-            },
-            {
-                name: "公園",
-                icon: "🌳",
-                story: "緑いっぱいの公園に着きました。<br>ベンチに座っているおじいさんと、<br>元気に走り回っている犬がいます。<br>草むらで何かキラキラ光っているのが見えます！",
-                choices: [
-                    { text: "犬と遊ぶ", action: "playWithDog" },
-                    { text: "おじいさんと話す", action: "talkToOldMan" },
-                    { text: "キラキラを調べる", action: "searchTreasure", treasure: "shinySeed" }
-                ],
-                treasures: ["shinySeed"]
-            },
-            {
-                name: "商店街",
-                icon: "🏪",
-                story: "賑やかな商店街に来ました。<br>おいしそうなにおいが漂っています。<br>パン屋さんと八百屋さんが見えます。<br>古い建物の隙間に何か落ちているようです。",
-                choices: [
-                    { text: "パン屋さんに行く", action: "visitBakery" },
-                    { text: "八百屋さんに行く", action: "visitVeggieStore" },
-                    { text: "隙間を調べる", action: "searchTreasure", treasure: "oldCoin" }
-                ],
-                treasures: ["oldCoin"]
-            },
-            {
-                name: "川辺",
-                icon: "🌊",
-                story: "静かな川辺に到着しました。<br>釣りをしているおじさんと、<br>水面で泳いでいるカモたちがいます。<br>水辺で美しい貝がらが光っています。",
-                choices: [
-                    { text: "釣り人と話す", action: "talkToFisher" },
-                    { text: "カモを見る", action: "watchDucks" },
-                    { text: "貝がらを拾う", action: "searchTreasure", treasure: "prettyShell" }
-                ],
-                treasures: ["prettyShell"]
-            },
-            {
-                name: "坂道",
-                icon: "⛰️",
-                story: "ちょっと急な坂道です。<br>少し疲れてきましたが、<br>おばあさんが優しく見守ってくれています。<br>足元に不思議な石が転がっています。",
-                choices: [
-                    { text: "頑張って登る", action: "climbHill" },
-                    { text: "おばあさんと話す", action: "talkToOldWoman" },
-                    { text: "石を調べる", action: "searchTreasure", treasure: "magicStone" }
-                ],
-                treasures: ["magicStone"]
-            },
-            {
-                name: "交差点",
-                icon: "🚦",
-                story: "大きな交差点に着きました。<br>信号が赤になっています。<br>ルールを守って安全に渡りましょう。<br>街路樹の下に金色の葉っぱが落ちています。",
-                choices: [
-                    { text: "信号を待つ", action: "waitForSignal" },
-                    { text: "左右を確認する", action: "checkBothSides" },
-                    { text: "葉っぱを拾う", action: "searchTreasure", treasure: "goldenLeaf" },
-                    { text: "図書館へ向かう", action: "next", next: 6 },
-                    { text: "美術館へ向かう", action: "next", next: 7 },
-                    { text: "市場へ向かう", action: "next", next: 8 }
-                ],
-                treasures: ["goldenLeaf"]
-            },
-            {
-                name: "図書館",
-                icon: "📚",
-                story: "静かな図書館に着きました。<br>本がたくさん並んでいます。<br>ページをめくる音が心地よいです。",
-                choices: [
-                    { text: "本を読む", action: "readBook" },
-                    { text: "次へ進む", action: "next" }
-                ],
-                treasures: []
-            },
-            {
-                name: "美術館",
-                icon: "🖼️",
-                story: "美術館に入ると素敵な絵が並んでいます。<br>静かに鑑賞している人たちがいます。",
-                choices: [
-                    { text: "絵を鑑賞する", action: "viewArt" },
-                    { text: "次へ進む", action: "next" }
-                ],
-                treasures: []
-            },
-            {
-                name: "市場",
-                icon: "🥕",
-                story: "市場は活気であふれています。<br>色とりどりの果物や野菜が並んでいます。",
-                choices: [
-                    { text: "果物を試食する", action: "tasteFruit" },
-                    { text: "次へ進む", action: "next" }
-                ],
-                treasures: []
-            },
-            {
-                name: "裏道",
-                icon: "🛣️",
-                story: "細い裏道で突然大きな犬が現れました！<br>どうする？",
-                choices: [
-                    { text: "走って逃げる", action: "runAway", next: 10 },
-                    { text: "そっと後ずさりする", action: "backAway", next: 11 },
-                    { text: "助けを呼ぶ", action: "callHelp", next: 12 },
-                    { text: "おやつをあげる", action: "befriendDog", next: 10 }
-                ],
-                treasures: []
-            },
-            {
-                name: "森",
-                icon: "🌲",
-                story: "森に逃げ込むと、木々の間から光が差し込みます。<br>鳥のさえずりが聞こえてきます。",
-                choices: [
-                    { text: "鳥の声を聞く", action: "listenToBirds" },
-                    { text: "木の実を拾う", action: "pickAcorn" },
-                    { text: "次へ進む", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "池",
-                icon: "🏞️",
-                story: "静かな池にたどり着きました。<br>水面には小さな魚が泳いでいます。",
-                choices: [
-                    { text: "魚を眺める", action: "watchFish" },
-                    { text: "石を投げる", action: "throwStone" },
-                    { text: "次へ進む", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "駅",
-                icon: "🚉",
-                story: "賑やかな駅前に出ました。<br>たくさんの人が行き交っています。",
-                choices: [
-                    { text: "神社に行く", action: "next", next: 13 },
-                    { text: "動物園に行く", action: "next", next: 16 },
-                    { text: "海辺に行く", action: "next", next: 19 },
-                    { text: "家に帰る", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "神社",
-                icon: "⛩️",
-                story: "静かな神社に到着しました。<br>心が落ち着きます。",
-                choices: [
-                    { text: "お参りする", action: "prayAtShrine", next: 14 },
-                    { text: "次へ進む", action: "next", next: 14 }
-                ],
-                treasures: []
-            },
-            {
-                name: "橋",
-                icon: "🌉",
-                story: "大きな橋にさしかかりました。<br>下には川が流れています。",
-                choices: [
-                    { text: "景色を眺める", action: "viewBridge", next: 22 },
-                    { text: "次へ進む", action: "next", next: 22 }
-                ],
-                treasures: []
-            },
-            {
-                name: "カフェ",
-                icon: "☕",
-                story: "落ち着いたカフェに入りました。<br>いい香りが漂っています。",
-                choices: [
-                    { text: "コーヒーを飲む", action: "drinkCoffee", next: 23 },
-                    { text: "家に帰る", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "動物園",
-                icon: "🐼",
-                story: "賑やかな動物園です。<br>いろいろな動物がいます。",
-                choices: [
-                    { text: "動物を見る", action: "seeAnimals", next: 17 },
-                    { text: "次へ進む", action: "next", next: 17 }
-                ],
-                treasures: []
-            },
-            {
-                name: "庭園",
-                icon: "🌸",
-                story: "美しい庭園にやってきました。<br>花の香りがします。",
-                choices: [
-                    { text: "花を楽しむ", action: "enjoyGarden", next: 18 },
-                    { text: "次へ進む", action: "next", next: 18 }
-                ],
-                treasures: []
-            },
-            {
-                name: "遊園地",
-                icon: "🎢",
-                story: "楽しい遊園地です。<br>色々なアトラクションがあります。",
-                choices: [
-                    { text: "観覧車に乗る", action: "rideFerris", next: 23 },
-                    { text: "家に帰る", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "海辺",
-                icon: "🏖️",
-                story: "波の音が心地よい海辺に着きました。",
-                choices: [
-                    { text: "砂浜を歩く", action: "walkBeach", next: 20 },
-                    { text: "次へ進む", action: "next", next: 20 }
-                ],
-                treasures: []
-            },
-            {
-                name: "灯台",
-                icon: "🗼",
-                story: "高い灯台に到着しました。<br>海が一望できます。",
-                choices: [
-                    { text: "上まで登る", action: "climbLighthouse", next: 21 },
-                    { text: "次へ進む", action: "next", next: 21 }
-                ],
-                treasures: []
-            },
-            {
-                name: "山頂",
-                icon: "🗻",
-                story: "山頂に着きました。<br>遠くまで見渡せます。",
-                choices: [
-                    { text: "景色を楽しむ", action: "enjoyMountain", next: 15 },
-                    { text: "次へ進む", action: "next", next: 15 }
-                ],
-                treasures: []
-            },
-            {
-                name: "学校",
-                icon: "🏫",
-                story: "懐かしい学校に着きました。<br>子どもたちの声が聞こえてきます。",
-                choices: [
-                    { text: "校庭を歩く", action: "walkSchoolyard", next: 23 },
-                    { text: "家に帰る", action: "next", next: 23 }
-                ],
-                treasures: []
-            },
-            {
-                name: "おうち",
-                icon: "🏠",
-                story: "お疲れさまでした！<br>楽しい散歩から帰ってきました。<br>今日の出会いを振り返ってみましょう。<br>もしかしたら、特別な宝物も見つかるかも？",
-                choices: [
-                    { text: "日記を見る", action: "showDiary" },
-                    { text: "周りを探索する", action: "searchTreasure", treasure: "heartCrystal" }
-                ],
-                treasures: ["heartCrystal"]
-            }
-        ]
+        name: "公園",
+        icon: "🌳",
+        story: "緑いっぱいの公園に着きました。<br>ベンチに座っているおじいさんと、<br>元気に走り回っている犬がいます。<br>草むらで何かキラキラ光っているのが見えます！",
+        choices: [
+            { text: "犬と遊ぶ", action: "playWithDog" },
+            { text: "おじいさんと話す", action: "talkToOldMan" },
+            { text: "キラキラを調べる", action: "searchTreasure", treasure: "shinySeed" },
+            { text: "ベンチで休む", action: "takeRest" }
+        ],
+        treasures: ["shinySeed"]
+    },
+    {
+        name: "商店街",
+        icon: "🏪",
+        story: "賑やかな商店街に来ました。<br>おいしそうなにおいが漂っています。<br>パン屋さんと八百屋さんが見えます。<br>古い建物の隙間に何か落ちているようです。",
+        choices: [
+            { text: "パン屋さんに行く", action: "visitBakery" },
+            { text: "八百屋さんに行く", action: "visitVeggieStore" },
+            { text: "隙間を調べる", action: "searchTreasure", treasure: "oldCoin" },
+            { text: "カフェで一息つく", action: "drinkCoffee" }
+        ],
+        treasures: ["oldCoin"]
+    },
+    {
+        name: "川辺",
+        icon: "🌊",
+        story: "静かな川辺に到着しました。<br>釣りをしているおじさんと、<br>水面で泳いでいるカモたちがいます。<br>水辺で美しい貝がらが光っています。",
+        choices: [
+            { text: "釣り人と話す", action: "talkToFisher" },
+            { text: "カモを見る", action: "watchDucks" },
+            { text: "貝がらを拾う", action: "searchTreasure", treasure: "prettyShell" },
+            { text: "石を投げる", action: "throwStone" }
+        ],
+        treasures: ["prettyShell"]
+    },
+    {
+        name: "坂道",
+        icon: "⛰️",
+        story: "ちょっと急な坂道です。<br>少し疲れてきましたが、<br>おばあさんが優しく見守ってくれています。<br>足元に不思議な石が転がっています。",
+        choices: [
+            { text: "頑張って登る", action: "climbHill" },
+            { text: "おばあさんと話す", action: "talkToOldWoman" },
+            { text: "石を調べる", action: "searchTreasure", treasure: "magicStone" },
+            { text: "休憩する", action: "takeRest" }
+        ],
+        treasures: ["magicStone"]
+    },
+    {
+        name: "図書館",
+        icon: "📚",
+        story: "静かな図書館に着きました。<br>本がたくさん並んでいます。<br>ページをめくる音が心地よいです。",
+        choices: [
+            { text: "本を読む", action: "readBook" },
+            { text: "本を探す", action: "browseBooks" },
+            { text: "静かに休む", action: "takeRest" },
+            { text: "散歩を続ける", action: "next" }
+        ],
+        treasures: []
+    },
+    {
+        name: "美術館",
+        icon: "🖼️",
+        story: "美術館に入ると素敵な絵が並んでいます。<br>静かに鑑賞している人たちがいます。",
+        choices: [
+            { text: "絵を鑑賞する", action: "viewArt" },
+            { text: "彫刻を見る", action: "observeSculpture" },
+            { text: "ベンチで休む", action: "takeRest" },
+            { text: "散歩を続ける", action: "next" }
+        ],
+        treasures: []
+    },
+    {
+        name: "森",
+        icon: "🌲",
+        story: "森に入ると、木々の間から光が差し込みます。<br>鳥のさえずりが聞こえてきます。",
+        choices: [
+            { text: "鳥の声を聞く", action: "listenToBirds" },
+            { text: "木の実を拾う", action: "pickAcorn" },
+            { text: "ベンチで休む", action: "takeRest" },
+            { text: "散歩を続ける", action: "next" }
+        ],
+        treasures: []
+    },
+    {
+        name: "池",
+        icon: "🏞️",
+        story: "静かな池にたどり着きました。<br>水面には小さな魚が泳いでいます。",
+        choices: [
+            { text: "魚を眺める", action: "watchFish" },
+            { text: "石を投げる", action: "throwStone" },
+            { text: "ベンチで休む", action: "takeRest" },
+            { text: "散歩を続ける", action: "next" }
+        ],
+        treasures: []
     }
 ];
+
+const mysteryLocation = {
+    name: "なぞの路地裏",
+    icon: "🕵️",
+    story: "静かな路地裏で何か不思議なことが起こっているようです。どうする？",
+    choices: [
+        { text: "手がかりを探す", action: "inspectClue" },
+        { text: "周りの人に聞く", action: "askPasser" },
+        { text: "警察を呼ぶ", action: "callPolice" },
+        { text: "そっと立ち去る", action: "leaveMystery" }
+    ],
+    treasures: []
+};
 
 const events = {
     playWithDog: {
@@ -504,7 +384,17 @@ function startWalk() {
     gameState.currentLocation = 0;
     gameState.heartPoints = 0;
     gameState.diaryEntries = [];
-    gameState.dayLocations = days[gameState.currentDay - 1].locations;
+
+    const pool = [...baseLocations];
+    const todaysLocations = [];
+    for (let i = 0; i < 6; i++) {
+        const idx = Math.floor(Math.random() * pool.length);
+        todaysLocations.push(pool.splice(idx, 1)[0]);
+    }
+    const mysteryIdx = Math.floor(Math.random() * todaysLocations.length);
+    todaysLocations[mysteryIdx] = mysteryLocation;
+
+    gameState.dayLocations = [startLocation, ...todaysLocations, endLocation];
     gameState.remainingIndexes = [];
     for (let i = 1; i < gameState.dayLocations.length - 1; i++) {
         gameState.remainingIndexes.push(i);
@@ -559,7 +449,7 @@ function moveToNextLocation(nextIndex) {
         if (i !== -1) {
             gameState.remainingIndexes.splice(i, 1);
         }
-    } else if (gameState.remainingIndexes.length > 0 && gameState.visitedCount < 15) {
+    } else if (gameState.remainingIndexes.length > 0 && gameState.visitedCount < 6) {
         const random = Math.floor(Math.random() * gameState.remainingIndexes.length);
         gameState.currentLocation = gameState.remainingIndexes.splice(random, 1)[0];
     } else {
@@ -567,7 +457,7 @@ function moveToNextLocation(nextIndex) {
         gameState.remainingIndexes = [];
     }
     gameState.visitedCount++;
-    if (gameState.visitedCount >= 15 || gameState.currentLocation === gameState.dayLocations.length - 1) {
+    if (gameState.visitedCount >= 6 || gameState.currentLocation === gameState.dayLocations.length - 1) {
         gameState.currentLocation = gameState.dayLocations.length - 1;
         gameState.remainingIndexes = [];
     }
@@ -671,7 +561,7 @@ function showEvent(eventName, nextIndex) {
 }
 
 function updateProgress() {
-    const percent = (Math.min(gameState.visitedCount, 15) / 15) * 100;
+    const percent = (Math.min(gameState.visitedCount, 6) / 6) * 100;
     document.getElementById('progress-fill').style.width = percent + '%';
 }
 
@@ -808,3 +698,43 @@ document.addEventListener('mouseover', event => {
 window.addEventListener('load', () => {
     startWalk();
 });
+
+const extraEvents = {
+    takeRest: {
+        story: "ベンチに座ってひと休みしました。<br>少し元気が戻ってきます。",
+        heartPoints: 1,
+        diary: "😌 ベンチで休憩して体力を回復しました。",
+    },
+    browseBooks: {
+        story: "棚を歩き回り、気になる本をいくつか手に取りました。",
+        heartPoints: 1,
+        diary: "📖 図書館で面白そうな本を探しました。",
+    },
+    observeSculpture: {
+        story: "美しい彫刻に見入ってしまいました。",
+        heartPoints: 2,
+        diary: "🗿 美術館で素敵な彫刻を鑑賞しました。",
+    },
+    inspectClue: {
+        story: "周囲を調べると小さな手がかりを見つけました。<br>謎は深まります。",
+        heartPoints: 2,
+        diary: "🕵️ 手がかりを見つけてミステリーは続きます。",
+    },
+    askPasser: {
+        story: "通りがかりの人が怪しい影を見たと教えてくれました。",
+        heartPoints: 1,
+        diary: "👂 通行人から貴重な情報を得ました。",
+    },
+    callPolice: {
+        story: "警察がすぐに駆けつけ、状況を確認してくれました。事件は無事解決！",
+        heartPoints: 3,
+        diary: "🚓 警察を呼んで事件が解決しました。",
+    },
+    leaveMystery: {
+        story: "何もなかったことにしてその場を離れました。",
+        heartPoints: 0,
+        diary: "😶 不思議な出来事を見なかったことにしました。",
+    }
+};
+
+Object.assign(events, extraEvents);
