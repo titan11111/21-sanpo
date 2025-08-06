@@ -54,7 +54,7 @@ body {
     gap: 10px;
 }
 
-.heart-points, .treasure-count {
+.heart-points, .treasure-count, .day-info {
     font-size: 18px;
     font-weight: bold;
     background: rgba(255, 255, 255, 0.5);
@@ -321,7 +321,7 @@ body {
         align-items: center;
     }
     
-    .heart-points, .treasure-count {
+    .heart-points, .treasure-count, .day-info {
         font-size: 16px;
     }
     
