@@ -696,7 +696,7 @@ document.addEventListener('mouseover', event => {
 });
 
 window.addEventListener('load', () => {
-    startWalk();
+    initDailyWalk();
 });
 
 const extraEvents = {
@@ -738,3 +738,101 @@ const extraEvents = {
 };
 
 Object.assign(events, extraEvents);
+
+// --- Daily walk progression system ---
+
+const eventPool = [
+    { title: "Flower Field", description: "Beautiful flowers are blooming", icon: "🌼" },
+    { title: "Mysterious Alley", description: "A passerby told you about a suspicious shadow", icon: "🕵️" },
+    { title: "Quiet Shrine", description: "You hear distant bells ringing", icon: "🔔" },
+    { title: "Riverside Walk", description: "The water sparkles in the sun", icon: "🌊" },
+    { title: "Bustling Market", description: "Vendors shout cheerful greetings", icon: "🛍️" },
+    { title: "Hilltop View", description: "The town looks tiny from up here", icon: "⛰️" },
+    { title: "Cozy Cafe", description: "The smell of fresh coffee fills the air", icon: "☕" },
+    { title: "Old Library", description: "Dusty books whisper forgotten tales", icon: "📚" },
+    { title: "Sunny Plaza", description: "Children play happily under the sun", icon: "☀️" },
+    { title: "Whispering Woods", description: "The leaves rustle with secrets", icon: "🌲" },
+    { title: "Hidden Garden", description: "A gate opens to a sea of blossoms", icon: "🌷" },
+    { title: "Seaside Pier", description: "Waves crash softly against the pier", icon: "⚓" },
+    { title: "Starry Observatory", description: "You peek through a telescope at distant stars", icon: "🌠" },
+    { title: "Foggy Moor", description: "Mist curls around your feet", icon: "🌫️" },
+    { title: "Rustic Farm", description: "Animals greet you with curious eyes", icon: "🐄" },
+    { title: "Lively Festival", description: "Music and laughter fill the streets", icon: "🎉" },
+    { title: "Deserted Playground", description: "The swings creak in the wind", icon: "🛝" },
+    { title: "Antique Shop", description: "Every shelf holds a story", icon: "🪑" },
+    { title: "Mountain Trail", description: "You hike along a winding path", icon: "🥾" },
+    { title: "Sakura Park", description: "Petals dance in a gentle breeze", icon: "🌸" },
+    { title: "Moonlight Beach", description: "The moon paints silver on the waves", icon: "🌙" },
+    { title: "Silent Station", description: "An empty platform waits patiently", icon: "🚉" },
+    { title: "Secret Cave", description: "Cool air flows from the darkness", icon: "🕳️" },
+    { title: "Floating Bridge", description: "The bridge gently sways over the river", icon: "🌉" },
+    { title: "Lantern Street", description: "Lanterns glow warmly overhead", icon: "🏮" },
+    { title: "Crystal Lake", description: "The water is clear enough to mirror the sky", icon: "💧" },
+    { title: "Windy Meadow", description: "Tall grass waves like the sea", icon: "🍃" },
+    { title: "Golden Temple", description: "Sunlight glints off golden roofs", icon: "🛕" },
+    { title: "Snowy Path", description: "Fresh snow crunches underfoot", icon: "❄️" },
+    { title: "Panda Forest", description: "A panda munches lazily on bamboo", icon: "🐼" }
+];
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+let currentDay;
+let currentStep;
+let todayEvents;
+
+function loadProgress() {
+    currentDay = parseInt(localStorage.getItem('currentDay')) || 1;
+    currentStep = parseInt(localStorage.getItem('currentStep')) || 0;
+    try {
+        todayEvents = JSON.parse(localStorage.getItem('todayEvents')) || [];
+    } catch (e) {
+        todayEvents = [];
+    }
+    if (!Array.isArray(todayEvents) || todayEvents.length < 6) {
+        todayEvents = shuffle([...eventPool]).slice(0, 6);
+    }
+}
+
+function saveProgress() {
+    localStorage.setItem('currentDay', currentDay);
+    localStorage.setItem('currentStep', currentStep);
+    localStorage.setItem('todayEvents', JSON.stringify(todayEvents));
+}
+
+function displayEvent(ev) {
+    document.getElementById('location-icon').textContent = ev.icon || '📍';
+    document.getElementById('location-name').textContent = ev.title;
+    document.getElementById('story-text').textContent = ev.description;
+}
+
+function updateUI() {
+    document.getElementById('day-display').textContent = `Day ${currentDay}`;
+    document.getElementById('step-display').textContent = `Step ${currentStep} / 6`;
+    document.getElementById('progress-fill').style.width = `${(currentStep / 6) * 100}%`;
+}
+
+function nextStep() {
+    if (currentStep < 6) {
+        const ev = todayEvents[currentStep];
+        displayEvent(ev);
+        currentStep++;
+        saveProgress();
+        updateUI();
+    } else {
+        currentDay++;
+        currentStep = 0;
+        todayEvents = shuffle([...eventPool]).slice(0, 6);
+        saveProgress();
+        updateUI();
+        displayEvent({ title: "A new day begins", description: "Click Next to start today's walk", icon: "☀️" });
+    }
+}
+
+function initDailyWalk() {
+    loadProgress();
+    updateUI();
+    displayEvent({ title: "Let's take a walk", description: "Press Next to visit the first place", icon: "🚶" });
+    document.getElementById('next-btn').addEventListener('click', nextStep);
+}
