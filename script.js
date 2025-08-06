@@ -742,36 +742,36 @@ Object.assign(events, extraEvents);
 // --- Daily walk progression system ---
 
 const eventPool = [
-    { title: "Flower Field", description: "Beautiful flowers are blooming", icon: "🌼" },
-    { title: "Mysterious Alley", description: "A passerby told you about a suspicious shadow", icon: "🕵️" },
-    { title: "Quiet Shrine", description: "You hear distant bells ringing", icon: "🔔" },
-    { title: "Riverside Walk", description: "The water sparkles in the sun", icon: "🌊" },
-    { title: "Bustling Market", description: "Vendors shout cheerful greetings", icon: "🛍️" },
-    { title: "Hilltop View", description: "The town looks tiny from up here", icon: "⛰️" },
-    { title: "Cozy Cafe", description: "The smell of fresh coffee fills the air", icon: "☕" },
-    { title: "Old Library", description: "Dusty books whisper forgotten tales", icon: "📚" },
-    { title: "Sunny Plaza", description: "Children play happily under the sun", icon: "☀️" },
-    { title: "Whispering Woods", description: "The leaves rustle with secrets", icon: "🌲" },
-    { title: "Hidden Garden", description: "A gate opens to a sea of blossoms", icon: "🌷" },
-    { title: "Seaside Pier", description: "Waves crash softly against the pier", icon: "⚓" },
-    { title: "Starry Observatory", description: "You peek through a telescope at distant stars", icon: "🌠" },
-    { title: "Foggy Moor", description: "Mist curls around your feet", icon: "🌫️" },
-    { title: "Rustic Farm", description: "Animals greet you with curious eyes", icon: "🐄" },
-    { title: "Lively Festival", description: "Music and laughter fill the streets", icon: "🎉" },
-    { title: "Deserted Playground", description: "The swings creak in the wind", icon: "🛝" },
-    { title: "Antique Shop", description: "Every shelf holds a story", icon: "🪑" },
-    { title: "Mountain Trail", description: "You hike along a winding path", icon: "🥾" },
-    { title: "Sakura Park", description: "Petals dance in a gentle breeze", icon: "🌸" },
-    { title: "Moonlight Beach", description: "The moon paints silver on the waves", icon: "🌙" },
-    { title: "Silent Station", description: "An empty platform waits patiently", icon: "🚉" },
-    { title: "Secret Cave", description: "Cool air flows from the darkness", icon: "🕳️" },
-    { title: "Floating Bridge", description: "The bridge gently sways over the river", icon: "🌉" },
-    { title: "Lantern Street", description: "Lanterns glow warmly overhead", icon: "🏮" },
-    { title: "Crystal Lake", description: "The water is clear enough to mirror the sky", icon: "💧" },
-    { title: "Windy Meadow", description: "Tall grass waves like the sea", icon: "🍃" },
-    { title: "Golden Temple", description: "Sunlight glints off golden roofs", icon: "🛕" },
-    { title: "Snowy Path", description: "Fresh snow crunches underfoot", icon: "❄️" },
-    { title: "Panda Forest", description: "A panda munches lazily on bamboo", icon: "🐼" }
+    { title: "花畑", description: "美しい花が咲き誇っています", icon: "🌼" },
+    { title: "不思議な路地", description: "通行人が怪しい影について教えてくれました", icon: "🕵️" },
+    { title: "静かな神社", description: "遠くで鈴の音が聞こえます", icon: "🔔" },
+    { title: "川沿いの散歩道", description: "水面が太陽の光でキラキラ光っています", icon: "🌊" },
+    { title: "賑やかな市場", description: "商人たちが元気に呼び込みをしています", icon: "🛍️" },
+    { title: "丘の上の景色", description: "ここから見る町はとても小さく見えます", icon: "⛰️" },
+    { title: "居心地の良いカフェ", description: "挽きたてのコーヒーの香りが漂っています", icon: "☕" },
+    { title: "古い図書館", description: "埃をかぶった本が忘れられた物語をささやいています", icon: "📚" },
+    { title: "陽だまりの広場", description: "子どもたちが太陽の下で楽しそうに遊んでいます", icon: "☀️" },
+    { title: "ささやきの森", description: "木々の葉が秘密を囁いています", icon: "🌲" },
+    { title: "隠れた庭園", description: "門を抜けると花の海が広がっています", icon: "🌷" },
+    { title: "海辺の桟橋", description: "波が静かに桟橋に打ち寄せています", icon: "⚓" },
+    { title: "星空の天文台", description: "望遠鏡を覗くと遠い星が見えます", icon: "🌠" },
+    { title: "霧の湿原", description: "足元に霧が絡みつきます", icon: "🌫️" },
+    { title: "素朴な農場", description: "動物たちが興味深そうな目で迎えてくれます", icon: "🐄" },
+    { title: "にぎやかな祭り", description: "街は音楽と笑い声であふれています", icon: "🎉" },
+    { title: "人けのない遊び場", description: "風に揺られてブランコがきしんでいます", icon: "🛝" },
+    { title: "骨董品店", description: "棚にはそれぞれ物語が詰まっています", icon: "🪑" },
+    { title: "山の小道", description: "曲がりくねった道を登っていきます", icon: "🥾" },
+    { title: "桜公園", description: "花びらがそよ風に舞っています", icon: "🌸" },
+    { title: "月明かりの浜辺", description: "月の光が波に銀色の輝きを描きます", icon: "🌙" },
+    { title: "静かな駅", description: "人気のないホームが静かにあなたを待っています", icon: "🚉" },
+    { title: "秘密の洞窟", description: "暗闇から冷たい風が流れてきます", icon: "🕳️" },
+    { title: "浮かぶ橋", description: "橋が川の上でゆっくり揺れています", icon: "🌉" },
+    { title: "提灯の通り", description: "頭上の提灯が暖かく光っています", icon: "🏮" },
+    { title: "クリスタルの湖", description: "水面は空を映すほど澄んでいます", icon: "💧" },
+    { title: "風の草原", description: "背の高い草が海のように揺れています", icon: "🍃" },
+    { title: "黄金の寺", description: "黄金の屋根が陽光を反射しています", icon: "🛕" },
+    { title: "雪道", description: "新雪が足の下でサクサクと音を立てます", icon: "❄️" },
+    { title: "パンダの森", description: "パンダがのんびりと竹を食べています", icon: "🐼" }
 ];
 
 function shuffle(array) {
@@ -808,8 +808,8 @@ function displayEvent(ev) {
 }
 
 function updateUI() {
-    document.getElementById('day-display').textContent = `Day ${currentDay}`;
-    document.getElementById('step-display').textContent = `Step ${currentStep} / 6`;
+    document.getElementById('day-display').textContent = `${currentDay}日目`;
+    document.getElementById('step-display').textContent = `${currentStep} / 6 歩`;
     document.getElementById('progress-fill').style.width = `${(currentStep / 6) * 100}%`;
 }
 
@@ -826,13 +826,13 @@ function nextStep() {
         todayEvents = shuffle([...eventPool]).slice(0, 6);
         saveProgress();
         updateUI();
-        displayEvent({ title: "A new day begins", description: "Click Next to start today's walk", icon: "☀️" });
+        displayEvent({ title: "新しい日が始まりました", description: "「次へ」をクリックして今日の散歩を始めましょう", icon: "☀️" });
     }
 }
 
 function initDailyWalk() {
     loadProgress();
     updateUI();
-    displayEvent({ title: "Let's take a walk", description: "Press Next to visit the first place", icon: "🚶" });
+    displayEvent({ title: "散歩に出かけましょう", description: "「次へ」を押して最初の場所へ移動します", icon: "🚶" });
     document.getElementById('next-btn').addEventListener('click', nextStep);
 }
