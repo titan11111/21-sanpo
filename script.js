@@ -423,11 +423,23 @@ function showLocation() {
         }
 
         const btn = document.createElement('button');
-        btn.className = 'choice-btn';
+        btn.className = 'choice-button';
         btn.textContent = choice.text;
         btn.onclick = () => handleChoice(choice.action, choice.treasure, choice.next);
         choicesDiv.appendChild(btn);
     });
+
+    addPlaceholderButtons(choicesDiv);
+}
+
+function addPlaceholderButtons(container) {
+    while (container.children.length < 4) {
+        const btn = document.createElement('button');
+        btn.className = 'choice-button';
+        btn.textContent = '選択できません';
+        btn.disabled = true;
+        container.appendChild(btn);
+    }
 }
 
 function handleChoice(action, treasure, nextIndex) {
@@ -496,10 +508,11 @@ function findTreasure(treasureId) {
         choicesDiv.innerHTML = '';
 
         const continueBtn = document.createElement('button');
-        continueBtn.className = 'choice-btn';
+        continueBtn.className = 'choice-button';
         continueBtn.textContent = '次へ進む';
         continueBtn.onclick = () => moveToNextLocation();
         choicesDiv.appendChild(continueBtn);
+        addPlaceholderButtons(choicesDiv);
     }, 2000);
 }
 
@@ -554,10 +567,11 @@ function showEvent(eventName, nextIndex) {
     choicesDiv.innerHTML = '';
 
     const continueBtn = document.createElement('button');
-    continueBtn.className = 'choice-btn';
+    continueBtn.className = 'choice-button';
     continueBtn.textContent = '次へ進む';
     continueBtn.onclick = () => moveToNextLocation(nextIndex);
     choicesDiv.appendChild(continueBtn);
+    addPlaceholderButtons(choicesDiv);
 }
 
 function updateProgress() {
@@ -690,7 +704,7 @@ function restartGame() {
 }
 
 document.addEventListener('mouseover', event => {
-    if (event.target.classList.contains('choice-btn')) {
+    if (event.target.classList.contains('choice-button')) {
         playSound(660);
     }
 });
