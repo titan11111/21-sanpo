@@ -41,7 +41,10 @@
                 さあ、散歩に出発です！
             </div>
             <div class="choices" id="choices">
-                <button class="choice-btn" id="next-btn">次へ</button>
+                <button class="choice-button" id="next-btn">次へ</button>
+                <button class="choice-button" disabled>選択できません</button>
+                <button class="choice-button" disabled>選択できません</button>
+                <button class="choice-button" disabled>選択できません</button>
             </div>
         </div>
         
@@ -60,15 +63,20 @@
         <div class="diary-screen" id="diary-screen" style="display: none;">
             <h2>📖 今日の散歩日記</h2>
             <div class="diary-content" id="diary-content"></div>
-            <button class="choice-btn" onclick="showTreasureCollection()">宝物コレクション</button>
-            <button class="choice-btn" onclick="restartGame()">また散歩する</button>
+            <button class="choice-button" onclick="showTreasureCollection()">宝物コレクション</button>
+            <button class="choice-button" onclick="restartGame()">また散歩する</button>
+            <button class="choice-button" disabled>選択できません</button>
+            <button class="choice-button" disabled>選択できません</button>
         </div>
         
         <!-- 宝物コレクション画面 -->
         <div class="treasure-collection" id="treasure-collection" style="display: none;">
             <h2>🎁 宝物コレクション</h2>
             <div class="collection-grid" id="collection-grid"></div>
-            <button class="choice-btn" onclick="backToDiary()">日記に戻る</button>
+            <button class="choice-button" onclick="backToDiary()">日記に戻る</button>
+            <button class="choice-button" disabled>選択できません</button>
+            <button class="choice-button" disabled>選択できません</button>
+            <button class="choice-button" disabled>選択できません</button>
         </div>
     </div>
 
