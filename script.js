@@ -711,6 +711,11 @@ document.addEventListener('mouseover', event => {
 
 window.addEventListener('load', () => {
     initDailyWalk();
+    const bgm = document.getElementById('bgm');
+    if (bgm) {
+        const resumeBgm = () => bgm.play();
+        document.addEventListener('click', resumeBgm, { once: true });
+    }
 });
 
 const extraEvents = {
