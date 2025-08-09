@@ -442,7 +442,23 @@ function addPlaceholderButtons(container) {
     }
 }
 
+const actionPersonalityMap = {
+    takeRest: 'relaxed',
+    drinkCoffee: 'relaxed',
+    readBook: 'relaxed',
+    next: 'hasty',
+    searchTreasure: 'suspicious',
+    inspectClue: 'suspicious',
+    askPasser: 'suspicious',
+    callPolice: 'suspicious'
+};
+
 function handleChoice(action, treasure, nextIndex) {
+    const personality = actionPersonalityMap[action];
+    if (personality) {
+        choiceStats[personality] = (choiceStats[personality] || 0) + 1;
+        saveProgress();
+    }
     if (action === 'next') {
         moveToNextLocation(nextIndex);
     } else if (action === 'showDiary') {
@@ -493,6 +509,9 @@ function findTreasure(treasureId) {
     gameState.totalTreasures++;
     gameState.heartPoints += 2;
     gameState.diaryEntries.push(`✨ ${treasure.name}を発見しました！ ${treasure.description}`);
+
+    choiceStats.lucky = (choiceStats.lucky || 0) + 1;
+    saveProgress();
 
     playSound(880);
     // 宝物発見演出
@@ -677,6 +696,29 @@ function getDiaryMessage() {
     }
 }
 
+function getDiagnosis() {
+    let maxType = null;
+    let maxVal = -Infinity;
+    for (const [type, val] of Object.entries(choiceStats)) {
+        if (val > maxVal) {
+            maxVal = val;
+            maxType = type;
+        }
+    }
+    switch (maxType) {
+        case 'relaxed':
+            return 'あなたはのんびり屋さんです。';
+        case 'hasty':
+            return 'あなたはせっかちです。';
+        case 'suspicious':
+            return 'あなたは疑り深いです。';
+        case 'lucky':
+            return 'あなたはラッキーです。';
+        default:
+            return 'まだ診断できるほど選択がありません。';
+    }
+}
+
 function restartGame() {
     gameState = {
         currentDay: 1,
@@ -795,6 +837,7 @@ function shuffle(array) {
 let currentDay;
 let currentStep;
 let todayEvents;
+let choiceStats;
 
 function loadProgress() {
     currentDay = parseInt(localStorage.getItem('currentDay')) || 1;
@@ -803,6 +846,11 @@ function loadProgress() {
         todayEvents = JSON.parse(localStorage.getItem('todayEvents')) || [];
     } catch (e) {
         todayEvents = [];
+    }
+    try {
+        choiceStats = JSON.parse(localStorage.getItem('choiceStats')) || { relaxed: 0, hasty: 0, suspicious: 0, lucky: 0 };
+    } catch (e) {
+        choiceStats = { relaxed: 0, hasty: 0, suspicious: 0, lucky: 0 };
     }
     if (!Array.isArray(todayEvents) || todayEvents.length < 6) {
         todayEvents = shuffle([...eventPool]).slice(0, 6);
@@ -813,6 +861,7 @@ function saveProgress() {
     localStorage.setItem('currentDay', currentDay);
     localStorage.setItem('currentStep', currentStep);
     localStorage.setItem('todayEvents', JSON.stringify(todayEvents));
+    localStorage.setItem('choiceStats', JSON.stringify(choiceStats));
 }
 
 function displayEvent(ev) {
@@ -838,9 +887,16 @@ function nextStep() {
         currentDay++;
         currentStep = 0;
         todayEvents = shuffle([...eventPool]).slice(0, 6);
+        if (currentDay > 7) {
+            const diagnosis = getDiagnosis();
+            displayEvent({ title: "１週間の診断", description: diagnosis, icon: "🔮" });
+            currentDay = 1;
+            choiceStats = { relaxed: 0, hasty: 0, suspicious: 0, lucky: 0 };
+        } else {
+            displayEvent({ title: "新しい日が始まりました", description: "「次へ」をクリックして今日の散歩を始めましょう", icon: "☀️" });
+        }
         saveProgress();
         updateUI();
-        displayEvent({ title: "新しい日が始まりました", description: "「次へ」をクリックして今日の散歩を始めましょう", icon: "☀️" });
     }
 }
 
