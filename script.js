@@ -12,6 +12,17 @@ let gameState = {
     visitedCount: 0      // 訪問済みの場所数
 };
 
+// 保存された日付を読み込む
+try {
+    const savedDay = parseInt(localStorage.getItem('currentDay'));
+    if (!isNaN(savedDay) && savedDay > 0) {
+        gameState.currentDay = savedDay;
+    }
+} catch (e) {
+    // localStorage が使用できない環境では 1 日目から開始
+    gameState.currentDay = 1;
+}
+
 // 宝物データベース
 const treasureData = {
     "shinySeed": {
@@ -593,6 +604,13 @@ function showEvent(eventName, nextIndex) {
     addPlaceholderButtons(choicesDiv);
 }
 
+function updateDayDisplay() {
+    const daySpan = document.getElementById('day-display');
+    if (daySpan) {
+        daySpan.textContent = `${gameState.currentDay}日目`;
+    }
+}
+
 function updateProgress() {
     const percent = (Math.min(gameState.visitedCount, 6) / 6) * 100;
     document.getElementById('progress-fill').style.width = percent + '%';
@@ -720,19 +738,21 @@ function getDiagnosis() {
 }
 
 function restartGame() {
-    gameState = {
-        currentDay: 1,
-        currentLocation: 0,
-        heartPoints: 0,
-        diaryEntries: [],
-        allDiary: [],
-        dayLocations: [],
-        metCharacters: {},
-        treasures: {},
-        totalTreasures: 0,
-        remainingIndexes: [],
-        visitedCount: 0
-    };
+    // 日付を進めて保存
+    gameState.currentDay += 1;
+    localStorage.setItem('currentDay', gameState.currentDay);
+
+    // 状態をリセット
+    gameState.currentLocation = 0;
+    gameState.heartPoints = 0;
+    gameState.diaryEntries = [];
+    gameState.allDiary = [];
+    gameState.dayLocations = [];
+    gameState.metCharacters = {};
+    gameState.treasures = {};
+    gameState.totalTreasures = 0;
+    gameState.remainingIndexes = [];
+    gameState.visitedCount = 0;
 
     document.getElementById('heart-points').textContent = '0';
     document.getElementById('treasure-count').textContent = '0';
@@ -742,6 +762,7 @@ function restartGame() {
     document.getElementById('diary-screen').style.display = 'none';
     document.getElementById('treasure-collection').style.display = 'none';
 
+    updateDayDisplay();
     startWalk();
 }
 
@@ -752,7 +773,8 @@ document.addEventListener('mouseover', event => {
 });
 
 window.addEventListener('load', () => {
-    initDailyWalk();
+    updateDayDisplay();
+    startWalk();
     const bgm = document.getElementById('bgm');
     if (bgm) {
         const resumeBgm = () => bgm.play();
